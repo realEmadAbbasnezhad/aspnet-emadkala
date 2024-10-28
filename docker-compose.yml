@@ -1,0 +1,6 @@
+﻿services:
+  aspnet-emadkala:
+    image: aspnet-emadkala
+    build:
+      context: .
+      dockerfile: Dockerfile
