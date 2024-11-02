@@ -1,19 +1,18 @@
 ﻿services:
   db-emadkala:
     image: mysql
-    entrypoint:
-      - MYSQL_DATABASE='emadkala'
-      - MYSQL_USER='aspnet'
-      - MYSQL_PASSWORD='aspnet-password'
-      - MYSQL_ROOT_PASSWORD='root-password'
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
     network_mode: host
     volumes:
-      - ./Database:/var/lib/mysql
-
+      - ./Database/mysql:/var/lib/mysql
+  
   aspnet-emadkala:
     image: aspnet-emadkala
     depends_on:
       - db-emadkala
+      - mail-emadkala
+    network_mode: host
     build:
       context: .
       dockerfile: Dockerfile
