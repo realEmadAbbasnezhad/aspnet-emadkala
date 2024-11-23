@@ -13,20 +13,19 @@ using ShikMelk.WebApp.Services;
 
 namespace Aspnet_EmadKala.Controllers;
 
-[ApiController, Route("Account"), Authorize]
+[ApiController, Route("Api/Account"), Authorize]
 public class AccountController(
     UserManager<EmadKalaUser> userManager,
     IConfiguration configuration,
     DatabaseModel dbContext,
     ISmsService smsService) : ControllerBase
 {
-    #region Potal
+    #region Portal
 
     public class PortalRequestModel
     {
         [Required, RegularExpression("^(?:0)?(9\\d{9})$")]
         public string PhoneNumber { set; get; } = "";
-
         public bool? RequestOtp { get; set; } = null;
     }
 
@@ -38,7 +37,7 @@ public class AccountController(
     }
 
     [HttpPost("Portal"), AllowAnonymous]
-    public async Task<PortalRespondModel> Portal([FromQuery] PortalRequestModel request)
+    public async Task<PortalRespondModel> Portal([FromBody] PortalRequestModel request)
     {
         var respond = new PortalRespondModel { NewUser = null, HasPassword = null, OptCooldown = null };
         if (User.Identity is { IsAuthenticated: true }) return respond;
@@ -88,8 +87,7 @@ public class AccountController(
     }
 
     [HttpPost("SigninOtp"), AllowAnonymous]
-    public async Task<IActionResult> SigninOtp(
-        [FromQuery] SigninOtpRequestModel requestModel)
+    public async Task<IActionResult> SigninOtp([FromBody] SigninOtpRequestModel requestModel)
     {
         var claimedUser = new EmadKalaUser
         {
